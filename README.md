@@ -1,16 +1,67 @@
-# React + Vite
+# 🌌 Skyra-Encoder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to **Skyra-Encoder**! This is a modern, fast, and scalable front-end application built with **React 19** and **Vite 8**. 
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- ⚡️ **Blazing Fast**: Powered by Vite for near-instant dev server start and lightning-fast HMR.
+- ⚛️ **React 19 Ready**: Uses the latest features and optimizations from React.
+- 🛠 **Linting & Formatting**: Pre-configured with ESLint and optimized rules for React development.
+- 📦 **Minimal Footprint**: Clean setup strictly focusing on performance and modern syntax.
+- 🚀 **Production Optimized**: Vite handles optimized production builds effortlessly.
 
-## React Compiler
+## 🚀 Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Follow these steps to get a local copy up and running.
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine. We recommend using the LTS version.
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/MrCoyote2075/Skyra-Encoder.git
+   cd Skyra-Encoder
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+## 💻 Usage
+
+To start the development server with Hot Module Replacement (HMR):
+
+```bash
+npm run dev
+```
+
+Open your browser and navigate to `http://localhost:5173`.
+
+### Other Scripts
+
+- **`npm run build`** - Builds the application for production.
+- **`npm run preview`** - Serves the production build locally for preview.
+- **`npm run lint`** - Lints the project files using ESLint.
+
+## 🏗 Architecture
+
+This project is built using:
+- **[React](https://react.dev/)** - The library for web and native user interfaces.
+- **[Vite](https://vitejs.dev/)** - Next Generation Frontend Tooling.
+- **[ESLint](https://eslint.org/)** - For static code analysis and maintaining code quality.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! 
+Feel free to check the [issues page](https://github.com/MrCoyote2075/Skyra-Encoder/issues).
+
+## 📝 License
+
+This project is open-source and available for use. See the repository contents for specific licensing details (if applicable).
+
+---
+*Created and maintained by [MrCoyote2075](https://github.com/MrCoyote2075).*
