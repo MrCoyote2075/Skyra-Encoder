@@ -1,0 +1,205 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+    --primary-light: #81d4fa;
+    --primary-dark: #29b6f6;
+    --bg-gradient-start: #e1f5fe;
+    --bg-gradient-end: #b3e5fc;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --shadow-color: rgba(41, 182, 246, 0.2);
+    --button-gradient: linear-gradient(
+        90deg,
+        var(--primary-dark),
+        var(--primary-light)
+    );
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-gradient-start);
+    background: linear-gradient(
+        160deg,
+        var(--bg-gradient-start),
+        var(--bg-gradient-end)
+    );
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 5vh;
+}
+
+.App {
+    text-align: center;
+    width: 100%;
+    max-width: 550px;
+    padding: 1rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.App-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+.logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 0.5rem;
+}
+h1 {
+    font-size: 2.25rem;
+    color: var(--text-primary);
+    margin: 0;
+    color: #07b1ff;
+    font-weight: 700;
+}
+.subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 350px;
+}
+
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px var(--shadow-color);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+input[type="url"] {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+}
+input[type="url"]:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 4px var(--shadow-color);
+}
+input[type="url"]::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.encode-btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--button-gradient);
+    color: white;
+    transition: all 0.2s ease-in-out;
+}
+.encode-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(41, 182, 246, 0.4);
+}
+.encode-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+}
+.output-group {
+    text-align: left;
+    margin-bottom: 0;
+}
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.output-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background-color: #f3f4f6;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    cursor: default;
+}
+.copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: white;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.copy-btn:hover {
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.App-footer {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.9;
+}
+.error-message {
+    color: #c62828;
+    font-size: 0.95rem;
+    padding: 1rem;
+    background-color: #ffebee;
+    border: 1px solid #e57373;
+    border-radius: 12px;
+    text-align: center;
+}
