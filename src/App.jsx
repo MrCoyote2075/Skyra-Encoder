@@ -29,35 +29,6 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [statusMsg, setStatusMsg] = useState("");
 
-    // const handleEncode = async () => {
-    //     if (!url) {
-    //         setError('Please enter a URL to process.');
-    //         return;
-    //     }
-    //     setLoading(true);
-    //     setResult(null);
-    //     setError("");
-    //     try {
-    //         const res = await fetch("/api/encode", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ url })
-    //         });
-    //         const data = await res.json();
-    //         if (!res.ok) {
-    //             throw new Error(data.error);
-    //         }
-    //         setResult(data);
-    //     } catch (err) {
-    //         if (err instanceof SyntaxError) {
-    //             setError("A server error occurred. The response was not valid.");
-    //         } else {
-    //             setError(err.message);
-    //         }
-    //     }
-    //     setLoading(false);
-    // };
-
     const handleEncode = async () => {
         if (!url) {
             setError('Please enter a URL to process.');
@@ -126,7 +97,7 @@ function App() {
                     <div className="output-group">
                         <label htmlFor="short-url">Short URL</label>
                         <div className="output-wrapper">
-                            <input id="short-url" type="text" value={result.shortUrl} readOnly />
+                            <input className="encoded-result" id="short-url" type="text" value={result.shortUrl} readOnly />
                             <CopyButton textToCopy={result.shortUrl} />
                         </div>
                     </div>
@@ -134,7 +105,7 @@ function App() {
                     <div className="output-group">
                         <label htmlFor="encoded-result">Skyra Code</label>
                         <div className="output-wrapper">
-                            <input id="encoded-result" type="text" value={result.encoded} readOnly />
+                            <input className="encoded-result" id="encoded-result" type="text" value={result.encoded} readOnly />
                             <CopyButton textToCopy={result.encoded} />
                         </div>
                     </div>

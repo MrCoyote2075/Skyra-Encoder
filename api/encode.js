@@ -80,7 +80,7 @@ export default async function handler(req, res) {
         }
 
         return res.status(200).json({
-            encoded: `IS-${result}`,
+            encoded: `DP-${result}`,
             shortUrl,
             status: "Generated using is.gd",
         });
