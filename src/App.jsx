@@ -1,6 +1,139 @@
 import { useState } from 'react';
 import './App.css';
 
+const reverseStr = (s) => s.split('').reverse().join('');
+
+const detectProvider = (u) => {
+    try {
+        const host = new URL(u).host.toLowerCase();
+        if (host.includes('shorturl.at')) return { id: 1, provider: 'shorturl' };
+        if (host.includes('tinyurl.com')) return { id: 2, provider: 'tinyurl' };
+        if (host.includes('bit.ly') || host.includes('bitly')) return { id: 3, provider: 'bitly' };
+        return { id: 0, provider: host };
+    } catch {
+        return { id: 0, provider: 'unknown' };
+    }
+};
+
+const extractToken = (u) => {
+    try {
+        const parsed = new URL(u);
+        let p = parsed.pathname || '';
+        if (p.endsWith('/')) p = p.slice(0, -1);
+        const parts = p.split('/');
+        return parts[parts.length - 1] || '';
+    } catch {
+        // fallback: simple split
+        const s = u.replace(/\/+$/, '');
+        const parts = s.split('/');
+        return parts[parts.length - 1].split('?')[0].split('#')[0] || '';
+    }
+};
+
+// Helpers for new algorithm
+const swapParts = (s) => {
+    const m = s.length;
+    if (m % 2 === 0) {
+        const half = m / 2;
+        const left = s.slice(0, half);
+        const right = s.slice(half);
+        return right + left;
+    } else {
+        const leftLen = Math.floor(m / 2);
+        // const rightLen = leftLen;
+        const left = s.slice(0, leftLen);
+        const middle = s.charAt(leftLen);
+        const right = s.slice(leftLen + 1);
+        return right + middle + left;
+    }
+};
+
+const shiftChar = (ch, delta) => {
+    const code = ch.charCodeAt(0);
+    // lowercase
+    if (ch >= 'a' && ch <= 'z') {
+        const base = 'a'.charCodeAt(0);
+        const len = 26;
+        return String.fromCharCode(((code - base + delta + len) % len) + base);
+    }
+    // uppercase
+    if (ch >= 'A' && ch <= 'Z') {
+        const base = 'A'.charCodeAt(0);
+        const len = 26;
+        return String.fromCharCode(((code - base + delta + len) % len) + base);
+    }
+    // digits
+    if (ch >= '0' && ch <= '9') {
+        const base = '0'.charCodeAt(0);
+        const len = 10;
+        return String.fromCharCode(((code - base + delta + len) % len) + base);
+    }
+    // fallback: shift unicode
+    return String.fromCharCode(code + delta);
+};
+
+const altShift = (s, startDelta = 2) => {
+    // startDelta positive for encode (+2 first), negative for decode
+    let delta = startDelta;
+    return s.split('').map((ch) => {
+        const out = shiftChar(ch, delta);
+        delta = -delta; // alternate +2, -2
+        return out;
+    }).join('');
+};
+
+// Encodes a short URL into the Skyra code format using user's algorithm steps 2-5
+const encodeSkyra = (url) => {
+    const prov = detectProvider(url);
+    let token = extractToken(url);
+    if (!token) throw new Error('Could not extract token from URL');
+    const n = token.length;
+
+    let temp = "";
+
+    for (let i = 0; i < token.length; i++) {
+
+        if (token[i] >= 'a' && token[i] <= 'z') {
+            temp += token[i].toUpperCase();
+        }
+        else if (token[i] >= 'A' && token[i] <= 'Z') {
+            temp += token[i].toLowerCase();
+        }
+        else {
+            temp += token[i];
+        }
+    }
+    // replace old token
+    token = temp;
+
+
+    // Step 2: last + first + middle
+    const first = token.charAt(0) || '';
+    const last = token.charAt(n - 1) || '';
+    const middle = n > 2 ? token.slice(1, n - 1) : (n === 2 ? '' : '');
+    const step2 = last + first + middle;
+
+    // Step 3: divide and swap (right + middle + left for odd, right+left for even)
+    const step3 = swapParts(step2);
+
+    // Step 4: alternate +2, -2 starting with +2
+    const step4 = altShift(step3, 2);
+
+    // Step 5: reverse
+    const finalCore = reverseStr(step4);
+
+    const encodedWithPrefix = `${prov.id}${finalCore}`;
+
+    return {
+        originalUrl: url,
+        providerId: prov.id,
+        provider: prov.provider,
+        shortCode: token,
+        encoded: encodedWithPrefix,
+        decoded: token
+    };
+};
+
 const CopyButton = ({ textToCopy }) => {
     const [isCopied, setIsCopied] = useState(false);
 
@@ -41,35 +174,25 @@ function App() {
         setStatusMsg("");
 
         try {
-            const res = await fetch("/api/encode", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Something went wrong");
-            }
-
+            const data = encodeSkyra(url);
             setResult(data);
-            setStatusMsg(data.status);
-
+            setStatusMsg('Encoded successfully');
         } catch (err) {
-            setError(err.message);
-            setStatusMsg("");
+            setError(err.message || 'Encoding failed');
+            setStatusMsg('');
         }
 
         setLoading(false);
     };
+
+    // decoding option removed from UI — only encoding is shown
 
     return (
         <div className="App">
             <header className="App-header">
                 <img src="/logo.png" alt="Skyra Logo" className="logo" />
                 <h1>Skyra Encoder</h1>
-                <p className="subtitle">Create a secure, Encoded URL for Skyra.</p>
+                <p className="subtitle">Paste a short URL (shorturl, tinyurl, bitly) to <br /> Generate Skyra Access Code.</p>
             </header>
 
             <main className="card">
@@ -80,7 +203,7 @@ function App() {
                         type="url"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Paste your long URL here..."
+                        placeholder="e.g. https://shorturl.at/abcde"
                     />
                 </div>
                 <button onClick={handleEncode} className="encode-btn" disabled={loading}>
@@ -89,23 +212,17 @@ function App() {
                 {statusMsg && <p className="subtitle">{statusMsg}</p>}
             </main>
 
+            {/* Decode UI removed — only encoding shown */}
+
             {error && <p className="error-message">{error}</p>}
 
             {result && (
                 <div className="results-container card">
 
                     <div className="output-group">
-                        <label htmlFor="short-url">Short URL</label>
-                        <div className="output-wrapper">
-                            <input className="encoded-result" id="short-url" type="text" value={result.shortUrl} readOnly />
-                            <CopyButton textToCopy={result.shortUrl} />
-                        </div>
-                    </div>
-
-                    <div className="output-group">
                         <label htmlFor="encoded-result">Skyra Code</label>
                         <div className="output-wrapper">
-                            <input className="encoded-result" id="encoded-result" type="text" value={result.encoded} readOnly />
+                            <input id="encoded-result" type="text" value= {result.encoded} readOnly />
                             <CopyButton textToCopy={result.encoded} />
                         </div>
                     </div>
