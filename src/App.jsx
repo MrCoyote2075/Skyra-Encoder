@@ -122,7 +122,7 @@ const encodeSkyra = (url) => {
     // Step 5: reverse
     const finalCore = reverseStr(step4);
 
-    const encodedWithPrefix = `${prov.id}${finalCore}`;
+    const encodedWithPrefix = `DP-${prov.id}${finalCore}`;
 
     return {
         originalUrl: url,
