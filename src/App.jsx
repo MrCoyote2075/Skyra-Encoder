@@ -4,15 +4,21 @@ import './App.css';
 const reverseStr = (s) => s.split('').reverse().join('');
 
 const detectProvider = (u) => {
+    let host = null;
+
     try {
-        const host = new URL(u).host.toLowerCase();
-        if (host.includes('shorturl.at')) return { id: 1, provider: 'shorturl' };
-        if (host.includes('tinyurl.com')) return { id: 2, provider: 'tinyurl' };
-        if (host.includes('bit.ly') || host.includes('bitly')) return { id: 3, provider: 'bitly' };
-        return { id: 0, provider: host };
+        host = new URL(u).host.toLowerCase();
+        if (!host)
+            throw new Error('URL must have a valid host');
     } catch {
-        return { id: 0, provider: 'unknown' };
+        throw new Error('Invalid URL format. Please enter a valid URL starting with http:// or https:// or Format of URL.');
     }
+
+    if (host.includes('shorturl.at')) return { id: 1, provider: 'shorturl' };
+    if (host.includes('tinyurl.com')) return { id: 2, provider: 'tinyurl' };
+    if (host.includes('bit.ly') || host.includes('bitly')) return { id: 3, provider: 'bitly' };
+
+    throw new Error(`Invalid URL.., please try with these providers [shorturl.at, tinyurl.com, bitly]`);
 };
 
 const extractToken = (u) => {
@@ -86,7 +92,7 @@ const altShift = (s, startDelta = 2) => {
 const encodeSkyra = (url) => {
     const prov = detectProvider(url);
     let token = extractToken(url);
-    if (!token) throw new Error('Could not extract token from URL');
+    if (!token) throw new Error('Invalid URL format. Enter a valid short URL (e.g. https://shorturl.at/abcde).');
     const n = token.length;
 
     let temp = "";
